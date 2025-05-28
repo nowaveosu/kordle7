@@ -129,7 +129,7 @@ export default function Home() {
           {rowData.map((cell, j) => (
             <div
               key={j}
-              className={`max-lg:w-12 max-lg:h-12 w-[66px] h-[66px] flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
+              className={`max-lg:w-10 max-lg:h-12 w-[66px] h-[66px] max-lg:text-lg flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
                 i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-white'
               }`}
             >
@@ -149,7 +149,7 @@ export default function Home() {
                   else if (key === '삭제') handleDeleteClick();
                   else handleKeyboardClick(key);
                 }}
-                className={`max-lg:w-9 max-lg:h-11 w-10 h-12 border rounded-sm text-lg border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
+                className={`max-lg:w-8.5 max-lg:h-10 max-lg:text-sm w-10 h-12 border rounded-sm text-lg border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
               >
                 {key}
               </button>
