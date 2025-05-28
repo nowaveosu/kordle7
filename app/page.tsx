@@ -9,7 +9,32 @@ export default function Home() {
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']
       .reduce((acc, key) => ({ ...acc, [key]: 'bg-white' }), {})
   );
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const answer = ['ㅈ', 'ㅜ', 'ㄹ', 'ㅌ', 'ㅏ', 'ㄱ', 'ㅣ'];
+
+  const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
+  const vowels = new Set(['ㅛ', 'ㅕ', 'ㅑ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅠ', 'ㅜ', 'ㅡ']);
+
+  const checkConsecutive = (input: string[]) => {
+    let conCount = 0;
+    let vowCount = 0;
+
+    for (let i = 0; i < input.length - 1; i++) {
+      if (consonants.has(input[i]) && consonants.has(input[i + 1])) {
+        conCount++;
+        if (conCount >= 2) return true; // 세 번 연속 자음
+      } else {
+        conCount = 0; // 다른 문자로 바뀌면 초기화
+      }
+      if (vowels.has(input[i]) && vowels.has(input[i + 1])) {
+        vowCount++;
+        if (vowCount >= 1) return true; // 두 번 연속 모음
+      } else {
+        vowCount = 0; // 다른 문자로 바뀌면 초기화
+      }
+    }
+    return false;
+  };
 
   const evaluateRow = (currentRow: number) => {
     const newColors = [...colors];
@@ -60,9 +85,18 @@ export default function Home() {
 
   const handleSubmitClick = () => {
     if (grid[row].every(cell => cell !== '')) {
-      evaluateRow(row);
-      if (row < 5) {
-        setRow(row + 1);
+      const hasConsecutive = checkConsecutive(grid[row]);
+      if (hasConsecutive) {
+        setErrorMessage('등록되지 않은 단어입니다!');
+        const newGrid = [...grid];
+        newGrid[row] = new Array(7).fill('');
+        setGrid(newGrid);
+        setTimeout(() => setErrorMessage(''), 1000);
+      } else {
+        evaluateRow(row);
+        if (row < 5) {
+          setRow(row + 1);
+        }
       }
     }
   };
@@ -118,6 +152,11 @@ export default function Home() {
           </div>
         ))}
       </div>
+      {errorMessage && (
+        <div className="mt-2 p-2 bg-red-200 text-red-800 rounded-lg">
+          {errorMessage}
+        </div>
+      )}
       <div className='bg-gray-200 m-2 p-2 round-lg'> 매일 오전12시 초기화됩니다 </div>
     </div>
   );
