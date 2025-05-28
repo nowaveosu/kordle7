@@ -17,14 +17,12 @@ export default function Home() {
     const answerCopy = [...answer];
     const tempColors = new Array(7).fill('bg-gray-400'); 
 
-
     for (let i = 0; i < 7; i++) {
       if (rowInput[i] === answer[i]) {
         tempColors[i] = 'bg-green-400';
         answerCopy[i] = ''; 
       }
     }
-
 
     for (let i = 0; i < 7; i++) {
       if (tempColors[i] !== 'bg-green-400') {
@@ -38,7 +36,6 @@ export default function Home() {
 
     newColors[currentRow] = tempColors;
     setColors(newColors);
-
 
     const usedKeys = new Set(rowInput.filter(cell => cell));
     const newKeyboardColors = { ...keyboardColors };
@@ -87,13 +84,14 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className='text-xl mb-2'>kordle 7</div>
       {grid.map((rowData, i) => (
         <div key={i} className="flex space-x-2 mb-2">
           {rowData.map((cell, j) => (
             <div
               key={j}
-              className={`w-12 h-12 flex items-center justify-center border-2 text-black ${
-                i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-gray-200'
+              className={`w-18 h-18 flex items-center text-2xl justify-center border-2 rounded-sm border-gray-200 text-black ${
+                i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-white'
               }`}
             >
               {cell}
@@ -103,7 +101,7 @@ export default function Home() {
       ))}
       <div className="mt-4">
         {keyboardLayout.map((rowKeys, i) => (
-          <div key={i} className="flex space-x-2 mb-2">
+          <div key={i} className="flex justify-center space-x-2 mb-2">
             {rowKeys.map((key) => (
               <button
                 key={key}
@@ -112,7 +110,7 @@ export default function Home() {
                   else if (key === '삭제') handleDeleteClick();
                   else handleKeyboardClick(key);
                 }}
-                className={`w-12 h-12 border-2 ${keyboardColors[key] || 'bg-white'}`}
+                className={`w-12 h-12 border-1 round-sm border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
               >
                 {key}
               </button>
@@ -120,6 +118,7 @@ export default function Home() {
           </div>
         ))}
       </div>
+      <div className='bg-gray-200 m-2 p-2 round-lg'> 매일 오전12시 초기화됩니다 </div>
     </div>
   );
 }
