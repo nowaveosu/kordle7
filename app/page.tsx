@@ -6,10 +6,6 @@ export default function Home() {
   const [row, setRow] = useState(0);
 
   const handleKeyboardClick = (key: string) => {
-    if (row < 6 && input.every(cell => cell !== '')) {
-      setRow(row + 1);
-      setInput(new Array(7).fill(''));
-    }
     if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(key) && input.filter(cell => cell !== '').length < 7) {
       const newInput = [...input];
       const emptyIndex = newInput.indexOf('');
@@ -20,10 +16,26 @@ export default function Home() {
     }
   };
 
+  const handleSubmitClick = () => {
+    if (input.every(cell => cell !== '')) {
+      setRow(row + 1);
+      setInput(new Array(7).fill(''));
+    }
+  };
+
+  const handleDeleteClick = () => {
+    const newInput = [...input];
+    const lastIndex = newInput.lastIndexOf(newInput.filter(cell => cell !== '').pop() || '');
+    if (lastIndex !== -1) {
+      newInput[lastIndex] = '';
+      setInput(newInput);
+    }
+  };
+
   const keyboardLayout = [
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ'],
     ['ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ'],
-    ['ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ'],
+    ['입력','ㅋ','ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ','ㅡ','삭제'],
   ];
 
   return (
@@ -50,7 +62,11 @@ export default function Home() {
             {rowKeys.map((key) => (
               <button
                 key={key}
-                onClick={() => handleKeyboardClick(key)}
+                onClick={() => {
+                  if (key === '입력') handleSubmitClick();
+                  else if (key === '삭제') handleDeleteClick();
+                  else handleKeyboardClick(key);
+                }}
                 className="w-12 h-12 bg-white border-2 hover:bg-gray-200"
               >
                 {key}
