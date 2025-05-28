@@ -4,6 +4,51 @@ import { useState } from 'react';
 export default function Home() {
   const [grid, setGrid] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('')));
   const [row, setRow] = useState(0);
+  const [colors, setColors] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('bg-gray-200')));
+  const [keyboardColors, setKeyboardColors] = useState<{ [key: string]: string }>(
+    ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']
+      .reduce((acc, key) => ({ ...acc, [key]: 'bg-white' }), {})
+  );
+  const answer = ['ㅈ', 'ㅜ', 'ㄹ', 'ㅌ', 'ㅏ', 'ㄱ', 'ㅣ'];
+
+  const evaluateRow = (currentRow: number) => {
+    const newColors = [...colors];
+    const rowInput = grid[currentRow];
+    const answerCopy = [...answer];
+    const tempColors = new Array(7).fill('bg-gray-400'); 
+
+
+    for (let i = 0; i < 7; i++) {
+      if (rowInput[i] === answer[i]) {
+        tempColors[i] = 'bg-green-400';
+        answerCopy[i] = ''; 
+      }
+    }
+
+
+    for (let i = 0; i < 7; i++) {
+      if (tempColors[i] !== 'bg-green-400') {
+        const answerIndex = answerCopy.indexOf(rowInput[i]);
+        if (answerIndex !== -1) {
+          tempColors[i] = 'bg-yellow-400';
+          answerCopy[answerIndex] = ''; 
+        }
+      }
+    }
+
+    newColors[currentRow] = tempColors;
+    setColors(newColors);
+
+
+    const usedKeys = new Set(rowInput.filter(cell => cell));
+    const newKeyboardColors = { ...keyboardColors };
+    for (const key in newKeyboardColors) {
+      if (!answer.includes(key) && usedKeys.has(key)) {
+        newKeyboardColors[key] = 'bg-gray-400';
+      }
+    }
+    setKeyboardColors(newKeyboardColors);
+  };
 
   const handleKeyboardClick = (key: string) => {
     if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(key) && grid[row].filter(cell => cell !== '').length < 7) {
@@ -18,6 +63,7 @@ export default function Home() {
 
   const handleSubmitClick = () => {
     if (grid[row].every(cell => cell !== '')) {
+      evaluateRow(row);
       if (row < 5) {
         setRow(row + 1);
       }
@@ -46,8 +92,8 @@ export default function Home() {
           {rowData.map((cell, j) => (
             <div
               key={j}
-              className={`w-12 h-12 flex items-center justify-center border-2 ${
-                i <= row && cell ? 'bg-white' : 'bg-gray-200'
+              className={`w-12 h-12 flex items-center justify-center border-2 text-black ${
+                i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-gray-200'
               }`}
             >
               {cell}
@@ -66,7 +112,7 @@ export default function Home() {
                   else if (key === '삭제') handleDeleteClick();
                   else handleKeyboardClick(key);
                 }}
-                className="w-12 h-12 bg-white border-2 hover:bg-gray-200"
+                className={`w-12 h-12 border-2 ${keyboardColors[key] || 'bg-white'}`}
               >
                 {key}
               </button>
