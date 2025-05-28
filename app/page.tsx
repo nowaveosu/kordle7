@@ -94,7 +94,12 @@ export default function Home() {
         setTimeout(() => setErrorMessage(''), 1000);
       } else {
         evaluateRow(row);
-        if (row < 5) {
+        const isCorrect = grid[row].every((cell, i) => cell === answer[i]);
+        if (isCorrect) {
+          alert('오늘의 kordle 7 성공!');
+        } else if (row === 5) {
+          alert('오늘의 kordle 7 실패ㅜㅜ');
+        } else {
           setRow(row + 1);
         }
       }
