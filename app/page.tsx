@@ -149,7 +149,7 @@ export default function Home() {
                   else if (key === '삭제') handleDeleteClick();
                   else handleKeyboardClick(key);
                 }}
-                className={`w-12 h-12 border-1 round-sm border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
+                className={`w-12 h-12 border-1 text-lg round-sm border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
               >
                 {key}
               </button>
