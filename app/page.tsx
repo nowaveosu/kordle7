@@ -90,7 +90,7 @@ export default function Home() {
           {rowData.map((cell, j) => (
             <div
               key={j}
-              className={`w-18 h-18 flex items-center text-2xl justify-center border-2 rounded-sm border-gray-200 text-black ${
+              className={`w-18 h-18 flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
                 i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-white'
               }`}
             >
