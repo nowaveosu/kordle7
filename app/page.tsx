@@ -125,11 +125,11 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className='text-xl mb-2'>kordle 7</div>
       {grid.map((rowData, i) => (
-        <div key={i} className="flex space-x-2 mb-2">
+        <div key={i} className="flex space-x-1 mb-2">
           {rowData.map((cell, j) => (
             <div
               key={j}
-              className={`w-18 h-18 flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
+              className={`max-lg:w-12 max-lg:h-12 w-[66px] h-[66px] flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
                 i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-white'
               }`}
             >
@@ -140,7 +140,7 @@ export default function Home() {
       ))}
       <div className="mt-4">
         {keyboardLayout.map((rowKeys, i) => (
-          <div key={i} className="flex justify-center space-x-2 mb-2">
+          <div key={i} className="flex justify-center space-x-2 max-lg:space-x-1 mb-2">
             {rowKeys.map((key) => (
               <button
                 key={key}
@@ -149,7 +149,7 @@ export default function Home() {
                   else if (key === '삭제') handleDeleteClick();
                   else handleKeyboardClick(key);
                 }}
-                className={`w-12 h-12 border-1 text-lg round-sm border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
+                className={`max-lg:w-9 max-lg:h-11 w-10 h-12 border rounded-sm text-lg border-gray-200 ${keyboardColors[key] || 'bg-white'}`}
               >
                 {key}
               </button>
@@ -162,7 +162,7 @@ export default function Home() {
           {errorMessage}
         </div>
       )}
-      <div className='bg-gray-200 m-2 p-2 round-lg'> 매일 오전12시 초기화됩니다 </div>
+      <div className='bg-gray-200 m-2 p-2 rounded-lg'> 매일 오전12시 초기화됩니다 </div>
     </div>
   );
 }
