@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react';
+import Modal from './components/Modal';
 
 export default function Home() {
   const [grid, setGrid] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('')));
@@ -10,11 +11,20 @@ export default function Home() {
       .reduce((acc, key) => ({ ...acc, [key]: 'bg-white' }), {})
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const answer = ['ㅈ', 'ㅜ', 'ㄹ', 'ㅌ', 'ㅏ', 'ㄱ', 'ㅣ'];
 
   const allowedKeys = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']);
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
   const vowels = new Set(['ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅠ', 'ㅜ', 'ㅡ']);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedKordle7');
+    if (!hasVisited) {
+      setIsModalOpen(true);
+      localStorage.setItem('hasVisitedKordle7', 'true');
+    }
+  }, []);
 
   const checkConsecutive = (input: string[]) => {
     let conCount = 0;
@@ -133,7 +143,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [row, grid, keyboardColors]); // 의존성 배열에 필요한 상태 추가
+  }, [row, grid, keyboardColors]);
 
   const keyboardLayout = [
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
@@ -143,7 +153,26 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className='text-xl mb-2'>kordle 7</div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-xl font-bold mb-4">꼬들7 소개</h2>
+        <p className="mb-2">꼬들7은 6번안에 맞춰야하는 한글 낱말퍼즐입니다!</p>
+        <p className="mb-2">예를들어 {' '}
+          <span className="bg-gray-200 px-1 rounded">ㅌㅗㅇㄴㅏㅁㅜ</span>를 입력시</p>
+        <p className="mb-2">
+          정답과 위치와 구성요소가 같다면 배경이{' '}
+          <span className="bg-green-400 px-1 rounded">초록색</span>으로 변하고,
+        </p>
+        <p className="mb-2">
+          위치는 다르고 구성요소가 맞다면 배경이{' '}
+          <span className="bg-yellow-400 px-1 rounded">노란색</span>으로 변하고,
+        </p>
+        <p className="mb-2">
+          위치도 다르고 포함도 안됐다면 배경이{' '}
+          <span className="bg-gray-400 px-1 rounded">회색</span>으로 변합니다.
+        </p>
+        <p>자음 모음으로 7칸을 꽉채워서 오늘의 단어를 맞춰보세요!</p>
+      </Modal>
+      <div className="text-xl mb-2">kordle 7</div>
       {grid.map((rowData, i) => (
         <div key={i} className="flex space-x-1 mb-2">
           {rowData.map((cell, j) => (
