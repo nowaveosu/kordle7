@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [grid, setGrid] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('')));
@@ -12,6 +12,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const answer = ['ㅈ', 'ㅜ', 'ㄹ', 'ㅌ', 'ㅏ', 'ㄱ', 'ㅣ'];
 
+  const allowedKeys = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']);
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
   const vowels = new Set(['ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅠ', 'ㅜ', 'ㅡ']);
 
@@ -73,7 +74,7 @@ export default function Home() {
   };
 
   const handleKeyboardClick = (key: string) => {
-    if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(key) && grid[row].filter(cell => cell !== '').length < 7) {
+    if (allowedKeys.has(key) && grid[row].filter(cell => cell !== '').length < 7) {
       const newGrid = [...grid];
       const emptyIndex = newGrid[row].indexOf('');
       if (emptyIndex !== -1) {
@@ -114,6 +115,25 @@ export default function Home() {
       setGrid(newGrid);
     }
   };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const key = event.key;
+    
+    if (key === 'Enter') {
+      handleSubmitClick();
+    } else if (key === 'Backspace') {
+      handleDeleteClick();
+    } else if (allowedKeys.has(key)) {
+      handleKeyboardClick(key);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [row, grid, keyboardColors]); // 의존성 배열에 필요한 상태 추가
 
   const keyboardLayout = [
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
