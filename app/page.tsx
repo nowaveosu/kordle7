@@ -18,6 +18,15 @@ export default function Home() {
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
   const vowels = new Set(['ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅠ', 'ㅜ', 'ㅡ']);
 
+  // 영어 키를 한글로 매핑하는 테이블
+  const keyMapping: { [key: string]: string } = {
+    'q': 'ㅂ', 'w': 'ㅈ', 'e': 'ㄷ', 'r': 'ㄱ', 't': 'ㅅ',
+    'a': 'ㅁ', 's': 'ㄴ', 'd': 'ㅇ', 'f': 'ㄹ', 'g': 'ㅎ',
+    'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'u': 'ㅕ',
+    'i': 'ㅑ', 'o': 'ㅐ', 'p': 'ㅔ', 'h': 'ㅗ', 'j': 'ㅓ',
+    'k': 'ㅏ', 'l': 'ㅣ', 'b': 'ㅠ', 'n': 'ㅜ', 'm': 'ㅡ',
+  };
+
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisitedKordle7');
     if (!hasVisited) {
@@ -128,13 +137,26 @@ export default function Home() {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key;
-    
+
+    // 모달이 열려 있을 때는 키보드 입력 무시
+    if (isModalOpen) return;
+
+    // Enter와 Backspace는 별도로 처리
     if (key === 'Enter') {
       handleSubmitClick();
-    } else if (key === 'Backspace') {
+      return;
+    }
+    if (key === 'Backspace') {
       handleDeleteClick();
-    } else if (allowedKeys.has(key)) {
-      handleKeyboardClick(key);
+      return;
+    }
+
+    // 나머지 키는 영어 키를 한글로 매핑
+    const lowerKey = key.toLowerCase();
+    const mappedKey = keyMapping[lowerKey] || key;
+
+    if (allowedKeys.has(mappedKey)) {
+      handleKeyboardClick(mappedKey);
     }
   };
 
@@ -143,7 +165,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [row, grid, keyboardColors]);
+  }, [row, grid, keyboardColors, isModalOpen]); // isModalOpen 추가
 
   const keyboardLayout = [
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
