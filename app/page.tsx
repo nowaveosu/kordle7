@@ -12,7 +12,7 @@ export default function Home() {
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const answer = ['ㄱ', 'ㅏ', 'ㅇ', 'ㅇ', 'ㅏ', 'ㅈ', 'ㅣ'];
+  const answer = ['ㄱ', 'ㅜ', 'ㅅ', 'ㅔ', 'ㄱ', 'ㅜ', 'ㄴ'];
 
   const allowedKeys = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']);
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
