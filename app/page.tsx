@@ -194,7 +194,10 @@ export default function Home() {
         </p>
         <p>자음 모음으로 7칸을 꽉채워서 오늘의 단어를 맞춰보세요!</p>
       </Modal>
-      <header className="text-xl mb-2">꼬들7</header>
+      <div className='flex justify-between w-108 max-lg:w-68 mb-2 text-lg'>
+        <header className="text-xl p-1.5">꼬들7</header>
+        <div className='bg-gray-200 rounded-lg text-xl p-1'>힌트: 공부</div>
+      </div>
       {grid.map((rowData, i) => (
         <div key={i} className="flex space-x-1 mb-2">
           {rowData.map((cell, j) => (
