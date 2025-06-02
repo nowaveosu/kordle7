@@ -48,7 +48,7 @@ export default function Home() {
       }
       if (vowels.has(input[i]) && vowels.has(input[i + 1])) {
         vowCount++;
-        if (vowCount >= 1) return true; // 두 번 연속 모음
+        if (vowCount >= 2) return true; // 세 번 연속 모음
       } else {
         vowCount = 0; // 다른 문자로 바뀌면 초기화
       }
