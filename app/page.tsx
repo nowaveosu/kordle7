@@ -12,7 +12,7 @@ export default function Home() {
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const answer = ['ㅂ', 'ㅡ', 'ㄹ', 'ㅏ', 'ㅈ', 'ㅣ', 'ㄹ'];
+  const answer = ['ㅁ', 'ㅏ', 'ㄹ', 'ㅌ', 'ㅣ', 'ㅈ', 'ㅡ'];
 
   const allowedKeys = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']);
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
@@ -196,7 +196,7 @@ export default function Home() {
       </Modal>
       <div className='flex justify-between w-108 max-lg:w-68 mb-2 text-lg'>
         <header className="text-xl p-1.5">꼬들7</header>
-        <div className='bg-gray-200 rounded-lg text-xl p-1'>힌트: 국가</div>
+        <div className='bg-gray-200 rounded-lg text-xl p-1'>힌트: 귀여운</div>
       </div>
       {grid.map((rowData, i) => (
         <div key={i} className="flex space-x-1 mb-2">
