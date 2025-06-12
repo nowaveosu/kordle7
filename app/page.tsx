@@ -18,11 +18,10 @@ export default function Home() {
   const consonants = new Set(['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ']);
   const vowels = new Set(['ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅠ', 'ㅜ', 'ㅡ']);
 
-  // 영어 키를 한글로 매핑하는 테이블
   const keyMapping: { [key: string]: string } = {
     'q': 'ㅂ', 'w': 'ㅈ', 'e': 'ㄷ', 'r': 'ㄱ', 't': 'ㅅ',
     'a': 'ㅁ', 's': 'ㄴ', 'd': 'ㅇ', 'f': 'ㄹ', 'g': 'ㅎ',
-    'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'y':'ㅛ', 'u': 'ㅕ',
+    'z': 'ㅋ', 'x': 'ㅌ', 'c': 'ㅊ', 'v': 'ㅍ', 'y': 'ㅛ', 'u': 'ㅕ',
     'i': 'ㅑ', 'o': 'ㅐ', 'p': 'ㅔ', 'h': 'ㅗ', 'j': 'ㅓ',
     'k': 'ㅏ', 'l': 'ㅣ', 'b': 'ㅠ', 'n': 'ㅜ', 'm': 'ㅡ',
   };
@@ -42,15 +41,15 @@ export default function Home() {
     for (let i = 0; i < input.length - 1; i++) {
       if (consonants.has(input[i]) && consonants.has(input[i + 1])) {
         conCount++;
-        if (conCount >= 2) return true; // 세 번 연속 자음
+        if (conCount >= 2) return true;
       } else {
-        conCount = 0; // 다른 문자로 바뀌면 초기화
+        conCount = 0;
       }
       if (vowels.has(input[i]) && vowels.has(input[i + 1])) {
         vowCount++;
-        if (vowCount >= 2) return true; // 세 번 연속 모음
+        if (vowCount >= 2) return true;
       } else {
-        vowCount = 0; // 다른 문자로 바뀌면 초기화
+        vowCount = 0;
       }
     }
     return false;
@@ -60,12 +59,12 @@ export default function Home() {
     const newColors = [...colors];
     const rowInput = grid[currentRow];
     const answerCopy = [...answer];
-    const tempColors = new Array(7).fill('bg-gray-400'); 
+    const tempColors = new Array(7).fill('bg-gray-400');
 
     for (let i = 0; i < 7; i++) {
       if (rowInput[i] === answer[i]) {
         tempColors[i] = 'bg-green-400';
-        answerCopy[i] = ''; 
+        answerCopy[i] = '';
       }
     }
 
@@ -74,7 +73,7 @@ export default function Home() {
         const answerIndex = answerCopy.indexOf(rowInput[i]);
         if (answerIndex !== -1) {
           tempColors[i] = 'bg-yellow-400';
-          answerCopy[answerIndex] = ''; 
+          answerCopy[answerIndex] = '';
         }
       }
     }
@@ -103,7 +102,19 @@ export default function Home() {
     }
   };
 
-  const handleSubmitClick = () => {
+  const checkWordExists = async (word: string) => {
+    try {
+      const response = await fetch(`/api/naver-dict?query=${encodeURIComponent(word)}`);
+      const data = await response.json();
+      console.log("네이버 사전 API 응답:", data); // 디버깅용
+      return data.exists;
+    } catch (error) {
+      console.error("단어 확인 실패:", error);
+      return false;
+    }
+  };
+
+  const handleSubmitClick = async () => {
     if (grid[row].every(cell => cell !== '')) {
       const hasConsecutive = checkConsecutive(grid[row]);
       if (hasConsecutive) {
@@ -112,16 +123,29 @@ export default function Home() {
         newGrid[row] = new Array(7).fill('');
         setGrid(newGrid);
         setTimeout(() => setErrorMessage(''), 1000);
+        return;
+      }
+
+      const word = grid[row].join('');
+      const wordExists = await checkWordExists(word);
+
+      if (!wordExists) {
+        setErrorMessage('등록되지 않은 단어입니다!');
+        const newGrid = [...grid];
+        newGrid[row] = new Array(7).fill('');
+        setGrid(newGrid);
+        setTimeout(() => setErrorMessage(''), 1000);
+        return;
+      }
+
+      evaluateRow(row);
+      const isCorrect = grid[row].every((cell, i) => cell === answer[i]);
+      if (isCorrect) {
+        alert('오늘의 kordle 7 성공!');
+      } else if (row === 5) {
+        alert('오늘의 kordle 7 실패ㅜㅜ');
       } else {
-        evaluateRow(row);
-        const isCorrect = grid[row].every((cell, i) => cell === answer[i]);
-        if (isCorrect) {
-          alert('오늘의 kordle 7 성공!');
-        } else if (row === 5) {
-          alert('오늘의 kordle 7 실패ㅜㅜ');
-        } else {
-          setRow(row + 1);
-        }
+        setRow(row + 1);
       }
     }
   };
@@ -138,10 +162,8 @@ export default function Home() {
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key;
 
-    // 모달이 열려 있을 때는 키보드 입력 무시
     if (isModalOpen) return;
 
-    // Enter와 Backspace는 별도로 처리
     if (key === 'Enter') {
       handleSubmitClick();
       return;
@@ -151,7 +173,6 @@ export default function Home() {
       return;
     }
 
-    // 나머지 키는 영어 키를 한글로 매핑
     const lowerKey = key.toLowerCase();
     const mappedKey = keyMapping[lowerKey] || key;
 
@@ -165,7 +186,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [row, grid, keyboardColors, isModalOpen]); // isModalOpen 추가
+  }, [row, grid, keyboardColors, isModalOpen]);
 
   const keyboardLayout = [
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ'],
