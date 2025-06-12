@@ -106,7 +106,7 @@ export default function Home() {
     try {
       const response = await fetch(`/api/naver-dict?query=${encodeURIComponent(word)}`);
       const data = await response.json();
-      console.log("네이버 사전 API 응답:", data); // 디버깅용
+      console.log("네이버 사전 API 응답:", data); 
       return data.exists;
     } catch (error) {
       console.error("단어 확인 실패:", error);
