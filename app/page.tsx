@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import Modal from './components/Modal';
 
 export default function Home() {
-  const [grid, setGrid] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('')));
+  const initialColors = Array.from({ length: 6 }, () => Array(7).fill('bg-gray-200'));
+  const [grid, setGrid] = useState<string[][]>(Array.from({ length: 6 }, () => Array(7).fill('')));
   const [row, setRow] = useState(0);
-  const [colors, setColors] = useState<string[][]>(Array(6).fill([]).map(() => new Array(7).fill('bg-gray-200')));
+  const [colors, setColors] = useState<string[][]>(initialColors);
   const [keyboardColors, setKeyboardColors] = useState<{ [key: string]: string }>(
     ['ㅂ', 'ㅈ', 'ㄷ', 'ㄱ', 'ㅅ', 'ㅛ', 'ㅕ', 'ㅑ', 'ㅐ', 'ㅔ', 'ㅁ', 'ㄴ', 'ㅇ', 'ㄹ', 'ㅎ', 'ㅗ', 'ㅓ', 'ㅏ', 'ㅣ', 'ㅋ', 'ㅌ', 'ㅊ', 'ㅍ', 'ㅠ', 'ㅜ', 'ㅡ']
       .reduce((acc, key) => ({ ...acc, [key]: 'bg-white' }), {})
@@ -56,10 +57,10 @@ export default function Home() {
   };
 
   const evaluateRow = (currentRow: number) => {
-    const newColors = [...colors];
+    const newColors = colors.map(row => [...row]);
     const rowInput = grid[currentRow];
     const answerCopy = [...answer];
-    const tempColors = new Array(7).fill('bg-gray-400');
+    const tempColors = Array(7).fill('bg-gray-400');
 
     for (let i = 0; i < 7; i++) {
       if (rowInput[i] === answer[i]) {
@@ -106,7 +107,6 @@ export default function Home() {
     try {
       const response = await fetch(`/api/naver-dict?query=${encodeURIComponent(word)}`);
       const data = await response.json();
-      console.log("네이버 사전 API 응답:", data); 
       return data.exists;
     } catch (error) {
       console.error("단어 확인 실패:", error);
@@ -141,9 +141,11 @@ export default function Home() {
       evaluateRow(row);
       const isCorrect = grid[row].every((cell, i) => cell === answer[i]);
       if (isCorrect) {
-        alert('오늘의 kordle 7 성공!');
+        setTimeout(() => {
+          alert('오늘의 꼬들7 성공!');
+        }, 1000);
       } else if (row === 5) {
-        alert('오늘의 kordle 7 실패ㅜㅜ');
+        alert('오늘의 꼬들7 실패ㅜㅜ');
       } else {
         setRow(row + 1);
       }
@@ -225,8 +227,8 @@ export default function Home() {
             <div
               key={j}
               className={`max-lg:w-10 max-lg:h-12 w-[66px] h-[66px] max-lg:text-lg flex items-center text-2xl justify-center border-2 rounded-md border-gray-200 text-black ${
-                i < row && cell ? colors[i][j] : i === row && cell ? 'bg-white' : 'bg-white'
-              }`}
+                i <= row && cell ? colors[i][j] : 'bg-white'
+              } transition-colors duration-300`}
             >
               {cell}
             </div>
@@ -259,11 +261,8 @@ export default function Home() {
           {errorMessage}
         </div>
       )}
-      
-        <div className='bg-gray-200 m-1 p-2 rounded-lg'>예) 청바지, 주차장, 고등어</div>
-        <div className='bg-gray-200 m-1 p-2 rounded-lg'> 매일 아침 10시 초기화됩니다 </div>
-      
-      
+      <div className='bg-gray-200 m-1 p-2 rounded-lg'>예) 청바지, 주차장, 고등어</div>
+      <div className='bg-gray-200 m-1 p-2 rounded-lg'> 매일 아침 10시 초기화됩니다 </div>
     </div>
   );
 }
