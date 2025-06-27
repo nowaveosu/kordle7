@@ -62,6 +62,7 @@ export default function Home() {
     const answerCopy = [...answer];
     const tempColors = Array(7).fill('bg-gray-400');
 
+    // 초록색
     for (let i = 0; i < 7; i++) {
       if (rowInput[i] === answer[i]) {
         tempColors[i] = 'bg-green-400';
@@ -69,6 +70,7 @@ export default function Home() {
       }
     }
 
+    // 노란색
     for (let i = 0; i < 7; i++) {
       if (tempColors[i] !== 'bg-green-400') {
         const answerIndex = answerCopy.indexOf(rowInput[i]);
@@ -82,10 +84,19 @@ export default function Home() {
     newColors[currentRow] = tempColors;
     setColors(newColors);
 
-    const usedKeys = new Set(rowInput.filter(cell => cell));
+    // 키보드 색상 업데이트
     const newKeyboardColors = { ...keyboardColors };
-    for (const key in newKeyboardColors) {
-      if (!answer.includes(key) && usedKeys.has(key)) {
+    for (let i = 0; i < 7; i++) {
+      const key = rowInput[i];
+      const currentColor = newKeyboardColors[key];
+      const newColor = tempColors[i];
+
+      // 초록색 > 노란색 > 회색 > 흰색
+      if (newColor === 'bg-green-400') {
+        newKeyboardColors[key] = 'bg-green-400';
+      } else if (newColor === 'bg-yellow-400' && currentColor !== 'bg-green-400') {
+        newKeyboardColors[key] = 'bg-yellow-400';
+      } else if (newColor === 'bg-gray-400' && currentColor !== 'bg-green-400' && currentColor !== 'bg-yellow-400') {
         newKeyboardColors[key] = 'bg-gray-400';
       }
     }
@@ -109,7 +120,7 @@ export default function Home() {
       const data = await response.json();
       return data.exists;
     } catch (error) {
-      console.error("단어 확인 실패:", error);
+      console.log(error)
       return false;
     }
   };
