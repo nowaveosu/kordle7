@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose}) => {
           </p>
           <p className="mb-2">
             위치도 다르고 포함도 안됐다면 배경이{' '}<br />
-            <span className="bg-gray-400 px-1 rounded">회색</span>으로 변합니다.
+            <span className="bg-gray-400/70 px-1 rounded">회색</span>으로 변합니다.
           </p>
           <p>자음 모음으로 7칸을 꽉채워서 정답을 맞춰보세요!</p>
         </div>

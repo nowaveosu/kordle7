@@ -60,7 +60,7 @@ export default function Home() {
     const newColors = colors.map(row => [...row]);
     const rowInput = grid[currentRow];
     const answerCopy = [...answer];
-    const tempColors = Array(7).fill('bg-gray-400');
+    const tempColors = Array(7).fill('bg-gray-400/70');
 
     // 초록색
     for (let i = 0; i < 7; i++) {
@@ -96,8 +96,8 @@ export default function Home() {
         newKeyboardColors[key] = 'bg-green-400';
       } else if (newColor === 'bg-yellow-400' && currentColor !== 'bg-green-400') {
         newKeyboardColors[key] = 'bg-yellow-400';
-      } else if (newColor === 'bg-gray-400' && currentColor !== 'bg-green-400' && currentColor !== 'bg-yellow-400') {
-        newKeyboardColors[key] = 'bg-gray-400';
+      } else if (newColor === 'bg-gray-400/70' && currentColor !== 'bg-green-400' && currentColor !== 'bg-yellow-400') {
+        newKeyboardColors[key] = 'bg-gray-400/70';
       }
     }
     setKeyboardColors(newKeyboardColors);
@@ -241,7 +241,7 @@ export default function Home() {
                   else handleKeyboardClick(key);
                 }}
                 className={`max-lg:w-7.5 max-lg:h-10 max-lg:text-sm w-10 h-12 border rounded-sm text-lg border-gray-200 ${keyboardColors[key] || 'bg-white'} ${
-                  keyboardColors[key] === 'bg-gray-400' ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
+                  keyboardColors[key] === 'bg-gray-400/70' ? 'hover:bg-gray-600' : 'hover:bg-gray-200'
                 }`}
               >
                 {key}
@@ -255,7 +255,7 @@ export default function Home() {
           {errorMessage}
         </div>
       )}
-      <div className='bg-gray-200 m-1 p-2 rounded-lg'>예) 청바지, 주차장, 고등어</div>
+      <div className='bg-gray-200 m-1 p-2 rounded-lg'>예) 통나무, 주차장, 고등어</div>
       <div className='bg-gray-200 m-1 p-2 rounded-lg'> 매일 아침 10시 초기화됩니다 </div>
     </div>
   );
