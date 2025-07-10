@@ -213,7 +213,7 @@ export default function Home() {
   
       <div className='flex justify-between w-108 max-lg:w-68 mb-2 text-lg'>
         <header className="text-xl p-1.5">꼬들7</header>
-        <div className='bg-gray-200 rounded-lg text-xl p-1'>힌트: 동물원</div>
+        <div className='bg-gray-200 rounded-lg text-xl p-1'>힌트: 문구</div>
       </div>
       {grid.map((rowData, i) => (
         <div key={i} className="flex space-x-1 mb-2">
